@@ -1,3 +1,4 @@
+// eslint-disable @typescript-eslint/no-unused-vars
 /* eslint-disable no-console */
 import { Server } from "http";
 import mongoose from "mongoose";
