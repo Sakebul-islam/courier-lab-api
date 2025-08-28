@@ -1,32 +1,32 @@
-# Dropollo: Parcel Delivery System API
+# Courier Lab API
 
-A secure, modular, and role-based backend system designed to facilitate parcel delivery operations similar to Pathao Courier or Sundarban. The system enables users to register as senders or receivers and perform comprehensive parcel management operations including creation, tracking, status updates, and delivery confirmation.
+Courier Lab is a modular, production‑ready backend for courier and parcel delivery platforms. It offers secure authentication, role‑based access control, and complete parcel workflows—from creation and tracking to status updates and delivery confirmation.
 
 ## 🚀 Features
 
-- **Secure Authentication**: JWT-based authentication with password hashing
-- **Role-Based Access Control**: Admin, Sender, and Receiver roles with specific permissions
-- **Parcel Lifecycle Management**: Complete parcel tracking from creation to delivery
-- **Status Tracking**: Detailed status history with embedded logs
-- **Business Rule Enforcement**: Validated status transitions and access controls
-- **Real-time Tracking**: Public tracking endpoint for parcel status
-- **Fee Calculation**: Automated pricing based on weight, urgency, and distance
+- **Secure authentication**: JWT with hashed passwords (bcrypt)
+- **Role-based access**: Admin, Sender, Receiver with granular permissions
+- **End‑to‑end parcel management**: Create, update, track, confirm delivery
+- **Audit-friendly status history**: Detailed status timeline and logs
+- **Enforced business rules**: Validated transitions and access controls
+- **Public tracking**: Anonymous parcel status lookup by tracking ID
+- **Dynamic fee calculation**: Pricing based on weight, urgency, distance
 
 ## 🛠️ Technology Stack
 
-| Category           | Technology    | Purpose                       |
-| ------------------ | ------------- | ----------------------------- |
-| **Runtime**        | Node.js       | Server runtime environment    |
-| **Framework**      | Express.js    | Web application framework     |
-| **Language**       | TypeScript    | Type-safe development         |
-| **Database**       | MongoDB       | Document database             |
-| **ODM**            | Mongoose      | MongoDB object modeling       |
-| **Authentication** | JWT           | Token-based authentication    |
-| **Security**       | bcrypt        | Password hashing              |
-| **Validation**     | Zod           | Schema validation             |
-| **Environment**    | dotenv        | Environment configuration     |
-| **CORS**           | cors          | Cross-origin resource sharing |
-| **Cookie Parsing** | cookie-parser | Cookie handling               |
+| Category | Technology | Purpose |
+|---|---|---|
+| Runtime | Node.js | Server runtime environment |
+| Framework | Express.js | HTTP server and routing |
+| Language | TypeScript | Type-safe development |
+| Database | MongoDB | Document data store |
+| ODM | Mongoose | MongoDB object modeling |
+| Auth | JWT | Token-based authentication |
+| Security | bcrypt | Password hashing |
+| Validation | Zod | Schema validation |
+| Env | dotenv | Environment configuration |
+| CORS | cors | Cross-origin resource sharing |
+| Cookies | cookie-parser | Cookie handling |
 
 ## 📋 Prerequisites
 
@@ -36,111 +36,95 @@ A secure, modular, and role-based backend system designed to facilitate parcel d
 
 ## 🚀 Quick Start
 
-### 1. Clone the Repository
-
+1) Clone
 ```bash
-git clone https://github.com/sabbirosa/dropollo-api.git
-cd dropollo-api
+git clone https://github.com/Sakebul-islam/courier-lab-api.git
+cd courier-lab-api
 ```
 
-### 2. Install Dependencies
-
+2) Install
 ```bash
 npm install
 ```
 
-### 3. Environment Setup
-
-Create a `.env` file in the root directory:
-
+3) Configure env
+Create a `.env` file in the project root:
 ```env
-# Server Configuration
+# Server
 PORT=8000
 NODE_ENV=development
 
-# Database Configuration
-DB_URL=mongodb://localhost:27017/dropollo
+# Database
+DB_URL=mongodb://localhost:27017/courierlab
 
-# JWT Configuration
+# JWT
 JWT_ACCESS_SECRET=your-super-secure-secret-key
 JWT_ACCESS_EXPIRES=24h
 JWT_REFRESH_SECRET=your-refresh-secret-key
 JWT_REFRESH_EXPIRES=7d
 
-# Security Configuration
+# Security
 BCRYPT_SALT_ROUNDS=12
 
-# CORS Allowed Frontend URL
+# CORS
 FRONTEND_URL=http://localhost:3000
 ```
 
-### 4. Database Setup
+4) Start MongoDB
+Make sure MongoDB is running. Collections are created on first run.
 
-Ensure MongoDB is running on your system. The application will automatically create the necessary collections when it starts.
+5) Run
+- Development: `npm run dev`
+- Production: `npm run build && npm start`
 
-### 5. Run the Application
+Local API: `http://localhost:5000`
 
-**Development Mode:**
-
-```bash
-npm run dev
-```
-
-**Production Build:**
-
-```bash
-npm run build
-npm start
-```
-
-The API will be available at `http://localhost:8000`
-
-For Health check go to `http://localhost:8000/api/v1/health`
+Root health: `GET /` → `{ message: "Welcome to CourierLab API Server" }`
 
 ## 📚 API Endpoints
 
-### Authentication Routes
+### Authentication
 
 | Method | Endpoint                    | Description                                                                                                                                                                                                                                     | Access        |
 | ------ | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| `POST` | `/api/auth/register`        | **User Registration**: Creates a new user account with email, password, name, phone, address, and role. Validates unique email, hashes password with bcrypt, and returns user data without password. Default role is 'sender' unless specified. | Public        |
-| `POST` | `/api/auth/login`           | **User Login**: Authenticates user with email and password. Compares hashed password, generates JWT access and refresh tokens, sets tokens in HTTP-only cookies, and returns user data with tokens.                                             | Public        |
-| `POST` | `/api/auth/refresh-token`   | **Token Refresh**: Validates refresh token and generates new access token to extend user session without requiring re-login.                                                                                                                    | Public        |
-| `GET`  | `/api/auth/me`              | **Get Current Profile**: Retrieves authenticated user's complete profile information including personal details, address, and account status. Requires valid JWT token.                                                                         | Authenticated |
-| `PUT`  | `/api/auth/profile`         | **Update Profile**: Allows authenticated users to update their personal information including name, phone, and address. Validates input data and returns updated profile.                                                                       | Authenticated |
-| `PUT`  | `/api/auth/change-password` | **Change Password**: Enables users to change their password by providing current password and new password. Validates current password, hashes new password, and updates user record.                                                           | Authenticated |
-| `POST` | `/api/auth/logout`          | **User Logout**: Clears authentication cookies and invalidates user session. Removes access and refresh tokens from client.                                                                                                                     | Authenticated |
+| `POST` | `/api/auth/register`        | Register a new user (email, password, name, phone, address, role). Ensures unique email, hashes password (bcrypt), returns user (without password). Default role: sender.                                                                      | Public        |
+| `POST` | `/api/auth/login`           | Authenticate with email/password. Issues JWT access and refresh tokens in HTTP‑only cookies and returns user plus tokens.                                                                                                                       | Public        |
+| `POST` | `/api/auth/refresh-token`   | Exchange a valid refresh token for a new access token without re‑login.                                                                                                                                                                         | Public        |
+| `GET`  | `/api/auth/me`              | Return the authenticated user’s profile (personal details, address, account status). Requires a valid JWT.                                                                                                                                      | Authenticated |
+| `PUT`  | `/api/auth/profile`         | Update profile fields (e.g., name, phone, address). Validates input and returns the updated profile.                                                                                                                                             | Authenticated |
+| `PUT`  | `/api/auth/change-password` | Change password after verifying the current password. Hashes and saves the new password.                                                                                                                                                         | Authenticated |
+| `POST` | `/api/auth/logout`          | Log out by clearing authentication cookies and invalidating the session.                                                                                                                                                                         | Authenticated |
 
-### User Management Routes
+### User Management
 
 #### Admin-Only Routes
 
 | Method   | Endpoint              | Description                                                                                                                                                                                                   |
 | -------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET`    | `/api/user/`          | **Get All Users**: Retrieves paginated list of all users in the system with filtering options. Admin can view user details, roles, and account status. Supports search, pagination, and role-based filtering. |
-| `GET`    | `/api/user/stats`     | **User Statistics**: Provides comprehensive user analytics including total users, active users, blocked users, role distribution, and registration trends. Used for admin dashboard and reporting.            |
-| `GET`    | `/api/user/:id`       | **Get User by ID**: Retrieves detailed information about a specific user including profile data, role, account status, and creation date. Admin can view any user's complete profile.                         |
-| `PUT`    | `/api/user/:id/role`  | **Update User Role**: Allows admin to change user roles between 'admin', 'sender', and 'receiver'. Validates role permissions and updates user's access capabilities.                                         |
-| `PUT`    | `/api/user/:id/block` | **Block/Unblock User**: Enables admin to block or unblock user accounts. Blocked users cannot access protected routes or perform parcel operations. Includes reason for blocking.                             |
-| `DELETE` | `/api/user/:id`       | **Delete User**: Permanently removes user account from the system. Deletes user data and associated records. Cannot be undone.                                                                                |
+| `GET`    | `/api/user/`          | Paginated list of users with search and filtering (role, status, etc.). Shows user details, roles, and account states.                                                                                       |
+| `GET`    | `/api/user/stats`     | Aggregated user metrics: totals, active vs. blocked, role distribution, and registration trends (for dashboards/reporting).                                                                                   |
+| `GET`    | `/api/user/:id`       | Detailed user record by ID, including profile, role, account status, and timestamps.                                                                                                                         |
+| `PUT`    | `/api/user/:id/role`  | Change a user’s role among admin/sender/receiver with permission validation.                                                                                                                                  |
+| `PUT`    | `/api/user/:id/block` | Block or unblock a user (with reason). Blocked users lose access to protected routes and parcel operations.                                                                                                   |
+| `DELETE` | `/api/user/:id`       | Permanently delete a user and associated records. Irreversible.                                                                                                                                                |
 
-#### User Profile Routes
+#### My Profile
 
 | Method | Endpoint                            | Description                                                                                                                                                                      |
 | ------ | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET`  | `/api/user/profile/me`              | **Get My Profile**: Retrieves current authenticated user's complete profile information including personal details, address, role, and account status.                           |
-| `PUT`  | `/api/user/profile/update`          | **Update My Profile**: Allows users to update their personal information including name, phone, address, and other profile details. Validates input and returns updated profile. |
-| `PUT`  | `/api/user/profile/change-password` | **Change My Password**: Enables users to change their own password by providing current password verification and new password. Includes password strength validation.           |
+| `GET`  | `/api/user/profile/me`              | Return current user profile (details, address, role, status). Requires JWT.                                                                                                      |
+| `PUT`  | `/api/user/profile/update`          | Update profile fields (name, phone, address, etc.). Validates input and returns the updated record.                                                                              |
+| `PUT`  | `/api/user/profile/change-password` | Change your password after verifying the current one; enforces password strength.                                                                                                |
 
-### Parcel Management Routes
+### Parcels
 
-#### Public Routes
+#### Public
 
 | Method | Endpoint                        | Description                                                                                                                                                                               |
 | ------ | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `GET`  | `/api/parcel/track/:trackingId` | **Track Parcel**: Public endpoint to track parcel status using tracking ID. Returns parcel details, current status, delivery information, and status history. No authentication required. |
 
-#### Sender Routes
+#### Sender
 
 | Method   | Endpoint                 | Description                                                                                                                                                                                                                        |
 | -------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -149,7 +133,7 @@ For Health check go to `http://localhost:8000/api/v1/health`
 | `PUT`    | `/api/parcel/:id`        | **Update Parcel**: Allows sender to modify parcel details including receiver information, parcel specifications, and delivery preferences. Only available before parcel is dispatched (REQUESTED or APPROVED status).              |
 | `DELETE` | `/api/parcel/:id/cancel` | **Cancel Parcel**: Enables sender to cancel parcel delivery with reason. Only available for parcels in REQUESTED or APPROVED status. Updates status to CANCELLED and maintains cancellation history.                               |
 
-#### Receiver Routes
+#### Receiver
 
 | Method | Endpoint                           | Description                                                                                                                                                                                                                |
 | ------ | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -157,7 +141,7 @@ For Health check go to `http://localhost:8000/api/v1/health`
 | `PUT`  | `/api/parcel/:id/confirm-delivery` | **Confirm Delivery**: Allows receiver to confirm successful delivery of parcel. Updates status to DELIVERED, adds confirmation note, and records delivery timestamp. Only available for parcels addressed to the receiver. |
 | `GET`  | `/api/parcel/delivery-history`     | **Get Delivery History**: Retrieves paginated list of successfully delivered parcels for the authenticated receiver. Shows completed deliveries with delivery dates and confirmation details.                              |
 
-#### Admin Routes
+#### Admin
 
 | Method   | Endpoint                 | Description                                                                                                                                                                                                               |
 | -------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -168,57 +152,32 @@ For Health check go to `http://localhost:8000/api/v1/health`
 | `GET`    | `/api/parcel/stats`      | **Get Parcel Statistics**: Provides comprehensive parcel analytics including total parcels, delivered count, in-transit count, average delivery time, revenue metrics, and status breakdown.                              |
 | `DELETE` | `/api/parcel/:id`        | **Delete Parcel**: Permanently removes parcel from the system. Deletes parcel data, status history, and all associated records. Cannot be undone.                                                                         |
 
-#### Shared Routes (Role-based access)
+#### Shared (Role-based access)
 
 | Method | Endpoint                         | Description                                                                                                                                                                                                                  |
 | ------ | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `GET`  | `/api/parcel/:id`                | **Get Parcel Details**: Retrieves detailed parcel information including sender, receiver, parcel details, pricing, current status, and delivery information. Access restricted to parcel owner (sender), receiver, or admin. |
 | `GET`  | `/api/parcel/:id/status-history` | **Get Status History**: Retrieves complete status history of parcel including all status changes, timestamps, updater information, locations, and notes. Access restricted to parcel owner, receiver, or admin.              |
 
-## 🔄 Parcel Status Flow
+## 🏗️ Architecture & Deployment
 
-The parcel delivery system follows a comprehensive status flow to ensure proper tracking and management:
+- **Runtime**: Express app exported (no `listen` in serverless entry)
+- **Serverless**: `src/api/index.ts` exports `default` handler; reuses a single MongoDB connection per cold start
+- **Build**: TypeScript → `dist/` via `tsc` (also used by Vercel `vercel-build`)
+- **Vercel**: `vercel.json` rewrites all traffic to `dist/api/index.js` using `@vercel/node`
 
-### Status Transitions
+### Required Environment Variables
+- PORT, NODE_ENV
+- DB_URL
+- BCRYPT_SALT_ROUNDS
+- JWT_ACCESS_SECRET, JWT_ACCESS_EXPIRES
+- JWT_REFRESH_SECRET, JWT_REFRESH_EXPIRES
+- SUPER_ADMIN_EMAIL, SUPER_ADMIN_PASSWORD
+- FRONTEND_URL
+- EXPRESS_SESSION_SECRET
+- GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_CALLBACK_URL
 
-```mermaid
-graph TD
-    A[REQUESTED] --> B[APPROVED]
-    A --> C[CANCELLED]
-    B --> D[PICKED_UP]
-    B --> C
-    D --> E[IN_TRANSIT]
-    D --> F[RETURNED]
-    E --> G[OUT_FOR_DELIVERY]
-    E --> H[FAILED_DELIVERY]
-    G --> I[DELIVERED]
-    G --> H
-    H --> G
-    H --> F
-    F --> A
-```
-
-### Status Descriptions
-
-| Status               | Description                           | Who Can Update |
-| -------------------- | ------------------------------------- | -------------- |
-| **REQUESTED**        | Initial status when parcel is created | System (Auto)  |
-| **APPROVED**         | Parcel approved for pickup            | Admin          |
-| **PICKED_UP**        | Parcel collected from sender          | Admin          |
-| **IN_TRANSIT**       | Parcel in transit to destination      | Admin          |
-| **OUT_FOR_DELIVERY** | Parcel out for final delivery         | Admin          |
-| **DELIVERED**        | Parcel successfully delivered         | Receiver/Admin |
-| **CANCELLED**        | Parcel cancelled (terminal state)     | Sender/Admin   |
-| **RETURNED**         | Parcel returned to sender             | Admin          |
-| **FAILED_DELIVERY**  | Delivery attempt failed               | Admin          |
-
-### Business Rules
-
-- **Senders** can only cancel parcels in `REQUESTED` or `APPROVED` status
-- **Receivers** can only confirm delivery for parcels addressed to them
-- **Admins** can update status at any stage and assign delivery personnel
-- **Blocked users** cannot create new parcels or update existing ones
-- **Status history** is maintained with timestamps and updater information
+Note: For production, prefer a persistent session store (e.g., connect-mongo) instead of the default memory store.
 
 ## 👥 User Roles & Permissions
 
@@ -341,6 +300,12 @@ npm run build
 npm start
 ```
 
-### Postman Collection
+### API Testing with Postman
 
-A Postman collection is available at [Postman Collection](https://github.com/sabbirosa/dropollo-api/blob/main/v1_api_postman_collection.json) to test all API endpoints.
+You can create a Postman collection by importing your running endpoints manually or exporting from your API client. A curated collection will be added to this repository in a future update.
+
+## 🧭 Roadmap
+- Add persistent session store for production (e.g., connect-mongo)
+- Add rate limiting and request logging middleware
+- Publish official Postman collection and OpenAPI schema
+- CI for lint, build, and deploy
