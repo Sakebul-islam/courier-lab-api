@@ -8,11 +8,10 @@ let isConnecting = false;
 async function ensureDb() {
   if (mongoose.connection.readyState === 1) return;
   if (mongoose.connection.readyState === 2 || isConnecting) return;
+
   isConnecting = true;
   try {
     await mongoose.connect(envVars.DB_URL);
-    // eslint-disable-next-line no-console
-    console.log("Connected to DB (Vercel)");
   } finally {
     isConnecting = false;
   }
