@@ -797,6 +797,7 @@ const getUserNotifications = async (
   // Transform parcels into notifications
   const notifications = parcels.map((parcel) => {
     const latestStatus = parcel.statusHistory[parcel.statusHistory.length - 1];
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const previousStatus = parcel.statusHistory[parcel.statusHistory.length - 2];
 
     // Determine notification type based on status change
