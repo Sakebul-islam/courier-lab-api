@@ -1,5 +1,5 @@
 {
-  "name": "dropollo-api",
+  "name": "courier-lab-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,6 +7,7 @@
     "start": "node ./dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
     "build": "tsc",
+    "vercel-build": "tsc",
     "lint": "npx eslint ./src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
